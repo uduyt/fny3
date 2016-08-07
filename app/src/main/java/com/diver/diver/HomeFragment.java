@@ -146,7 +146,7 @@ public class HomeFragment extends Fragment {
                                 editor.apply();
                             }
                         }
-
+//hi git
                         @Override
                         public void onStatusChanged(String provider, int status, Bundle extras) {
 
