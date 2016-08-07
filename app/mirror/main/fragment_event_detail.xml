@@ -1,0 +1,19 @@
+<!-- [ Mirror metadata ] generatedAt: 1467112244365 -->
+<!-- Generated screen file. Fill the id tags below with content with
+which to populate your previewed layout. For a complete specification
+of sample data, please see http://jimulabs.com/sample-data-specifications/ 
+
+Valid attributes on <screen> tag: theme="@style/someTheme" inEditMode="false" overlay="@drawable/mockup" -->
+<screen>
+    <_content layout="@layout/fragment_event_detail">
+        <!-- ImageView Examples:
+        <iv_collapsing_toolbar src="@drawable/image_resource" />
+        <iv_collapsing_toolbar src="relative_path/image.jpg" /> -->
+        <iv_collapsing_toolbar />
+        <!-- TextView Examples:
+        <tv_market_detail_name text="@string/string_resource" />
+        <tv_market_detail_name text="Text literal" textSize="14sp" /> -->
+        <tv_market_detail_name />
+        <iv_static_map />
+    </_content>
+</screen>

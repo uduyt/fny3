@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="30dp"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_data_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="6dp"
+        android:text="Persona 1"
+        android:textColor="@color/White"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_data_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:textColorHint="#70ffffff"
+        android:layout_marginLeft="24dp">
+
+        <EditText
+            android:id="@+id/et_data_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre"
+            android:textColorHint="@color/White"
+            android:theme="@style/MyAccentRadioButton"
+            android:textColor="@color/White"/>
+
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_data_second_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:textColorHint="#70ffffff"
+        android:layout_marginLeft="24dp">
+
+        <EditText
+            android:id="@+id/et_data_second_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Apellidos"
+            android:textColorHint="@color/White"
+            android:theme="@style/MyAccentRadioButton"
+            android:textColor="@color/White"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_data_dni"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#70ffffff"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="24dp">
+
+        <EditText
+            android:id="@+id/et_data_dni"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="DNI"
+            android:textColorHint="@color/White"
+            android:theme="@style/MyAccentRadioButton"
+            android:textColor="@color/White"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_data_dob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#70ffffff"
+        android:layout_marginLeft="24dp">
+
+        <EditText
+            android:id="@+id/et_data_dob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fecha de Nacimiento"
+            android:textColorHint="@color/White"
+            android:theme="@style/MyAccentRadioButton"
+            android:textColor="@color/White"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

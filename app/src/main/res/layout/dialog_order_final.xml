@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    android:padding="10dp">
+    <TextView
+        android:id="@+id/tv_order_final"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="¡Ya esta!\n\nAhora sólo tienes que esperar a que uno de nuestros relaciones públicas te contacte, si hay algun problema a la hora de contactar se intentarán otros medios.
+ "
+        android:textColor="@color/White"
+        android:textSize="18sp"/>
+
+
+
+</LinearLayout>

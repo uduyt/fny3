@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <group
+        android:id="@+id/menu_group1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="Eventos"
+            android:icon="@drawable/ic_drawer_home"/>
+        <item
+            android:id="@+id/nav_select_city"
+            android:title="Selecciona tu ciudad"
+            android:icon="@drawable/ic_location_city_black_24dp"/>
+        <!--<item
+            android:id="@+id/nav_discotecas"
+            android:title="Discotecas"
+            android:icon="@mipmap/ic_discotecas"/>-->
+       <!-- <item
+            android:id="@+id/nav_entradas"
+            android:title="Mis entradas"
+            android:icon="@mipmap/entradas"/>-->
+    </group>
+
+    <group
+        android:id="@+id/menu_group2"
+        android:checkableBehavior="single">
+       <!-- <item
+            android:id="@+id/nav_change_pass"
+            android:icon="@drawable/ic_settings_24dp"
+            android:title="Cambiar contraseña" />-->
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@drawable/ic_exit_to_app_24dp"
+            android:title="Cerrar Sesión" />
+    </group>
+
+
+</menu>
