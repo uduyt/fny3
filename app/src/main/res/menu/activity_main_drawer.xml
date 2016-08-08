@@ -14,6 +14,10 @@
             android:id="@+id/nav_select_city"
             android:title="Selecciona tu ciudad"
             android:icon="@drawable/ic_location_city_black_24dp"/>
+        <item
+            android:id="@+id/nav_my_orders"
+            android:title="Mis Entradas"
+            android:icon="@mipmap/entradas"/>
         <!--<item
             android:id="@+id/nav_discotecas"
             android:title="Discotecas"

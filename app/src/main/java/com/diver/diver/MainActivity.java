@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+
 import com.google.android.gms.location.LocationListener;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -67,6 +69,7 @@ import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
 import com.stripe.exception.AuthenticationException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity
     private int z = 0;
     private Location currentLocation;
     private GoogleApiClient mGoogleApiClient;
-    private static final int REQUEST_COARSE_LOCATION=0;
+    private static final int REQUEST_COARSE_LOCATION = 0;
 
     private static PayPalConfiguration config = new PayPalConfiguration()
 
@@ -128,17 +131,17 @@ public class MainActivity extends AppCompatActivity
         startService(intent);
         //*paypal
 
-        GoogleApiClient.ConnectionCallbacks connectionCallbacks= new GoogleApiClient.ConnectionCallbacks() {
+        GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
             @Override
             public void onConnected(@Nullable Bundle bundle) {
                 try {
 
-                    loadPermissions("android.permission.ACCESS_COARSE_LOCATION",REQUEST_COARSE_LOCATION);
+                    loadPermissions("android.permission.ACCESS_COARSE_LOCATION", REQUEST_COARSE_LOCATION);
 
-                    LocationListener locationListener= new LocationListener() {
+                    LocationListener locationListener = new LocationListener() {
                         @Override
                         public void onLocationChanged(Location location) {
-                            SharedPreferences.Editor editor= sharedPref.edit();
+                            SharedPreferences.Editor editor = sharedPref.edit();
                             editor.putFloat("lat", Float.valueOf(String.valueOf(currentLocation.getLatitude())));
                             editor.putFloat("long", Float.valueOf(String.valueOf(currentLocation.getLongitude())));
                             editor.apply();
@@ -147,30 +150,30 @@ public class MainActivity extends AppCompatActivity
 
                     LocationRequest locationRequest = new LocationRequest();
                     locationRequest.setFastestInterval(100)
-                                    .setInterval(200)
-                                    .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,locationRequest, locationListener);
+                            .setInterval(200)
+                            .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, locationListener);
                     currentLocation = LocationServices.FusedLocationApi.getLastLocation(
                             mGoogleApiClient);
                 } catch (SecurityException e) {
                     e.printStackTrace();
                 }
                 if (currentLocation != null) {
-                    SharedPreferences.Editor editor= sharedPref.edit();
+                    SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putFloat("lat", Float.valueOf(String.valueOf(currentLocation.getLatitude())));
                     editor.putFloat("long", Float.valueOf(String.valueOf(currentLocation.getLongitude())));
                     editor.apply();
 
-                    JSONObject jsonLocation= new JSONObject();
+                    JSONObject jsonLocation = new JSONObject();
 
                     try {
-                        jsonLocation.put("lat",String.valueOf(currentLocation.getLatitude()));
-                        jsonLocation.put("long",String.valueOf(currentLocation.getLongitude()));
+                        jsonLocation.put("lat", String.valueOf(currentLocation.getLatitude()));
+                        jsonLocation.put("long", String.valueOf(currentLocation.getLongitude()));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    (new Analytics(mContext)).execute("location","text",jsonLocation.toString());
+                    (new Analytics(mContext)).execute("location", "text", jsonLocation.toString());
 
                 }
             }
@@ -181,11 +184,11 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        GoogleApiClient.OnConnectionFailedListener connectionFailedListener= new GoogleApiClient.OnConnectionFailedListener() {
+        GoogleApiClient.OnConnectionFailedListener connectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
             @Override
             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                SharedPreferences.Editor editor= sharedPref.edit();
-                Log.i("connection_fail",connectionResult.toString());
+                SharedPreferences.Editor editor = sharedPref.edit();
+                Log.i("connection_fail", connectionResult.toString());
             }
         };
 
@@ -196,7 +199,6 @@ public class MainActivity extends AppCompatActivity
                     .addApi(LocationServices.API)
                     .build();
         }
-
 
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -280,8 +282,13 @@ public class MainActivity extends AppCompatActivity
             case "discotecas":
 
                 break;
-            case "mis_entradas":
-
+            case "orders":
+                OrdersFragment mOrdersFragment = new OrdersFragment();
+                mOrdersFragment.setArguments(extras);
+                FragmentTransaction ordersFragmentTransaction = getSupportFragmentManager().beginTransaction();
+                ordersFragmentTransaction.addToBackStack("orders");
+                ordersFragmentTransaction.replace(R.id.container, mOrdersFragment);
+                ordersFragmentTransaction.commit();
                 break;
         }
 
@@ -312,6 +319,12 @@ public class MainActivity extends AppCompatActivity
             Analytics analytics = new Analytics(mContext);
             analytics.execute("press_home_menu", "none");
             GoToFragment("home", new Bundle());
+        }
+        if (id == R.id.nav_my_orders) {
+            Analytics analytics = new Analytics(mContext);
+            analytics.execute("press_my_entries", "none");
+            GoToFragment("orders", new Bundle());
+
         } else if (id == R.id.nav_select_city) {
             Analytics analytics = new Analytics(mContext);
             analytics.execute("press_select_city_menu", "none");
@@ -775,16 +788,17 @@ public class MainActivity extends AppCompatActivity
                                         public void onSuccess(Token token) {
                                             // Send token to your server
                                             progressDialog.dismiss();
-                                            mEntry.putString("payment_token",token.getId());
-                                            mEntry.putString("payment_last_4",token.getCard().getLast4());
+                                            mEntry.putString("payment_token", token.getId());
+                                            mEntry.putString("payment_last_4", token.getCard().getLast4());
                                             ShowSuccessDialog();
-                                            Log.i("payment",token.toString());
-                                            (new Analytics(mContext)).execute("stripe_success","text",token.getId());
+                                            Log.i("payment", token.toString());
+                                            (new Analytics(mContext)).execute("stripe_success", "text", token.getId());
                                         }
+
                                         public void onError(Exception error) {
                                             // Show localized error message
                                             Snackbar.make(findViewById(R.id.container), "Ha ocurrido un error, por favor inténtelo de nuevo o contacte con alguien de nuestro equipo", Snackbar.LENGTH_LONG).show();
-                                            (new Analytics(mContext)).execute("stripe_error","text",error.toString());
+                                            (new Analytics(mContext)).execute("stripe_error", "text", error.toString());
                                         }
                                     }
                             );
@@ -937,10 +951,10 @@ public class MainActivity extends AppCompatActivity
                 try {
                     Log.i("paymentExample", confirm.toJSONObject().toString(4));
 
-                    mEntry.putString("payment_token",confirm.getProofOfPayment().getPaymentId());
-                    if(confirm.getProofOfPayment().getState().equals("approved")){
+                    mEntry.putString("payment_token", confirm.getProofOfPayment().getPaymentId());
+                    if (confirm.getProofOfPayment().getState().equals("approved")) {
                         ShowSuccessDialog();
-                    }else{
+                    } else {
                         MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(mContext);
 
                         MaterialDialog dialog = dialogBuilder
@@ -982,10 +996,10 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
     }
 
-    private void loadPermissions(String perm,int requestCode) {
+    private void loadPermissions(String perm, int requestCode) {
         if (ContextCompat.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED) {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(this, perm)) {
-                ActivityCompat.requestPermissions(this, new String[]{perm},requestCode);
+                ActivityCompat.requestPermissions(this, new String[]{perm}, requestCode);
             }
         }
     }
@@ -997,8 +1011,7 @@ public class MainActivity extends AppCompatActivity
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // granted
-                }
-                else{
+                } else {
                     // no granted
                 }
                 return;
