@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import java.util.List;
@@ -66,12 +67,21 @@ public class OrdersFragment extends Fragment {
         mProgressBar = (ProgressBar) myView.findViewById(R.id.pb_orders);
         mRecyclerView = (RecyclerView) myView.findViewById(R.id.rv_orders);
 
+        myView.findViewById(R.id.bt_no_orders).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.GoToFragment("home",new Bundle());
+            }
+        });
+
         (new SetOrders(getActivity(),this)).execute();
         return myView;
     }
 
     public void LoadData(List<Bundle> orders) {
         mOrders = orders;
+
+        mProgressBar.setVisibility(View.GONE);
 
         mAdapter = new OrderAdapter(mOrders,getActivity());
 

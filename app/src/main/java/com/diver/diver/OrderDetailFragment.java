@@ -1,5 +1,6 @@
 package com.diver.diver;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -34,8 +35,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import backend.Analytics;
@@ -46,12 +49,16 @@ public class OrderDetailFragment extends Fragment {
 private View myView;
     private Bundle mOrder;
     private Toolbar myToolbar;
+    private ImageView ivQR,  ivMap;
+    private TextView tvLocalizer, tvClubName, tvDate;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        myView = inflater.inflate(R.layout.fragment_event_detail, container, false);
+        mOrder=getArguments();
+
+        myView = inflater.inflate(R.layout.fragment_order_detail, container, false);
 
         myToolbar = (Toolbar) myView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(myToolbar);
@@ -69,15 +76,47 @@ private View myView;
         });
 
         //set Views and Layouts
-
-
+        ivQR=(ImageView) myView.findViewById(R.id.iv_order_detail_qr);
+        ivMap=(ImageView) myView.findViewById(R.id.iv_order_detail_static_map);
+        tvLocalizer=(TextView) myView.findViewById(R.id.tv_order_detail_localizer);
+        tvClubName=(TextView) myView.findViewById(R.id.tv_order_detail_club_name);
+        tvDate=(TextView) myView.findViewById(R.id.tv_order_detail_date);
         //*set Views and Layouts
 
+        //Load Data
+        tvLocalizer.setText("Localizador: " + mOrder.getString("order_localizer"));
+        tvClubName.setText(mOrder.getString("club_name"));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("es", "es"));
+        Date mDate=new Date();
+        try {
+            mDate= dateFormat.parse(mOrder.getString("event_date"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat mDateFormat = new SimpleDateFormat("EEEE, d 'de' MMMM", new Locale("es", "es"));
+        tvDate.setText(mDateFormat.format(mDate));
+        String url = "http://maps.googleapis.com/maps/api/staticmap?center="
+                + mOrder.getString("club_lat") + "," + mOrder.getString("club_long") + "&markers="
+                + mOrder.getString("club_lat") + "," + mOrder.getString("club_long")
+                + "&zoom=16&size=1200x300&key=AIzaSyAImYMIPImjNwFDtkFSPxvFQehGnStpb-M";
+
+        Log.v("urlmap", url);
+        Picasso.with(getActivity()).load(url).into(ivMap);
+
+        url = "https://chart.googleapis.com/chart?cht=qr&chs=545x545&chld=H|0&chl="
+                + mOrder.getString("order_localizer");
+
+        Log.v("urlqr", url);
+        Picasso.with(getActivity()).load(url).into(ivQR);
 
         return myView;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

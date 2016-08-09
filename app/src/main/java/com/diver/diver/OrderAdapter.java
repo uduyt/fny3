@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class OrderAdapter
@@ -24,17 +25,19 @@ public class OrderAdapter
 
     private Context mContext;
     private List<Bundle> mOrders;
+    private List<Date> mDates;
 
     public OrderAdapter(List<Bundle> orders, Context context) {
 
         mOrders=orders;
         mContext = context;
+        mDates=new ArrayList<>();
     }
 
     @Override
     public OrderViewHolder onCreateViewHolder(ViewGroup parent, int pos) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_dialog_data, parent, false);
+                .inflate(R.layout.item_order, parent, false);
 
         return new OrderViewHolder(view, mContext);
     }
@@ -42,7 +45,7 @@ public class OrderAdapter
     @Override
     public void onBindViewHolder(OrderViewHolder holder, int pos) {
 
-        holder.bindData(mOrders.get(pos),pos);
+        holder.bindData(mOrders.get(pos),pos, this);
     }
 
 
@@ -51,4 +54,17 @@ public class OrderAdapter
 
         return mOrders.size();
     }
+
+    public boolean isInDates(Date date){
+        boolean result=false;
+
+        for(Date mDate:mDates){
+            if(mDate.equals(date))result=true;
+        }
+
+        if(!result)mDates.add(date);
+
+        return result;
+    }
+
 }

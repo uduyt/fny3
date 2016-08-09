@@ -116,17 +116,24 @@ public class SetOrders extends AsyncTask<Object, String, String> {
 
             try {
                 JSONArray jsonResult= new JSONArray(result);
-                Bundle order= new Bundle();
+                Bundle order;
 
                 JSONObject jsonOrder;
                 for(int i=0;i<jsonResult.length();i++){
                     jsonOrder=jsonResult.getJSONObject(i);
 
+                    order=new Bundle();
+                    order.putString("event_id",jsonOrder.getString("event_id"));
                     order.putString("event_name",jsonOrder.getString("event_name"));
+                    order.putString("event_date",jsonOrder.getString("event_date"));
                     order.putString("club_name",jsonOrder.getString("club_name"));
+                    order.putString("club_lat",jsonOrder.getString("lat"));
+                    order.putString("club_long",jsonOrder.getString("long"));
                     order.putString("order_people",jsonOrder.getString("people"));
                     order.putString("order_price",jsonOrder.getString("price"));
                     order.putString("order_state",jsonOrder.getString("state"));
+                    order.putString("order_qr",jsonOrder.getString("qr"));
+                    order.putString("order_localizer",jsonOrder.getString("localizer"));
 
                     mOrders.add(order);
                 }

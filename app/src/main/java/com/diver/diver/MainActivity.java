@@ -263,6 +263,7 @@ public class MainActivity extends AppCompatActivity
         }
         switch (fragment) {
             case "home":
+                default:
                 HomeFragment mFragment = new HomeFragment();
                 mFragment.setArguments(extras);
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -289,6 +290,14 @@ public class MainActivity extends AppCompatActivity
                 ordersFragmentTransaction.addToBackStack("orders");
                 ordersFragmentTransaction.replace(R.id.container, mOrdersFragment);
                 ordersFragmentTransaction.commit();
+                break;
+            case "order_detail":
+                OrderDetailFragment mOrderDetailFragment = new OrderDetailFragment();
+                mOrderDetailFragment.setArguments(extras);
+                FragmentTransaction orderDetailFragmentTransaction = getSupportFragmentManager().beginTransaction();
+                orderDetailFragmentTransaction.addToBackStack("order_detail");
+                orderDetailFragmentTransaction.replace(R.id.container, mOrderDetailFragment);
+                orderDetailFragmentTransaction.commit();
                 break;
         }
 

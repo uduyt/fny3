@@ -44,7 +44,12 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 
 import backend.Analytics;
 import backend.LoginTask13;
@@ -86,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         loginButton = (LoginButton) findViewById(R.id.bt_facebook_login);
-        loginButton.setReadPermissions("email", "user_friends");
+        loginButton.setReadPermissions("email", "user_friends", "user_birthday");
 
 
         /*pbLogin = (ProgressBar) findViewById(R.id.pb_login);
@@ -99,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                 //pbLogin.setVisibility(View.VISIBLE);
                 //tvLogin.setText("");
                 Analytics analytics = new Analytics(mContext);
-                analytics.execute("log_in_attempt","none");
+                analytics.execute("log_in_attempt", "none");
                 loginButton.performClick();
             }
         });
@@ -118,27 +123,8 @@ public class LoginActivity extends AppCompatActivity {
                             // profile2 is the new profile
                             Log.v("facebook - profile", profile2.getFirstName());
                             mProfileTracker.stopTracking();
-                            GraphRequest request = GraphRequest.newMeRequest(
-                                    loginResult.getAccessToken(),
-                                    new GraphRequest.GraphJSONObjectCallback() {
-                                        @Override
-                                        public void onCompleted(JSONObject object, GraphResponse response) {
-                                            Log.v("LoginActivity", response.toString());
+                            LogIn(profile2);
 
-                                            // Application code
-                                            try {
-                                                String email = object.getString("email");
-                                                String gender = object.getString("gender");
-                                                LogIn(profile2, email,gender);
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
-                            Bundle permissions = new Bundle();
-                            permissions.putString("fields", "email,gender");
-                            request.setParameters(permissions);
-                            request.executeAsync();
                         }
                     };
                     mProfileTracker.startTracking();
@@ -146,26 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                     // because it is called by its constructor, internally.
                 } else {
                     final Profile profile = Profile.getCurrentProfile();
-                    GraphRequest request = GraphRequest.newMeRequest(
-                            loginResult.getAccessToken(),
-                            new GraphRequest.GraphJSONObjectCallback() {
-                                @Override
-                                public void onCompleted(JSONObject object, GraphResponse response) {
-                                    Log.v("LoginActivity", response.toString());
-                                    // Application code
-                                    try {
-                                        String email = object.getString("email");
-                                        String gender = object.getString("gender");
-                                        LogIn(profile, email,gender);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                    Bundle permissions = new Bundle();
-                    permissions.putString("fields", "email,gender");
-                    request.setParameters(permissions);
-                    request.executeAsync();
+                    LogIn(profile);
 
                 }
             }
@@ -195,12 +162,12 @@ public class LoginActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) llLogo.getLayoutParams();
 
                 int height = getResources().getDisplayMetrics().heightPixels / 2;
-                final int middleMargin = (int) ((height -StaticUtilities.convertDpToPixel(90,mContext))/1.5);
+                final int middleMargin = (int) ((height - StaticUtilities.convertDpToPixel(90, mContext)) / 1.5);
                 params.topMargin = middleMargin;
                 llLogo.setLayoutParams(params);
 
                 if (Profile.getCurrentProfile() != null) {
-                    LogIn(Profile.getCurrentProfile(), "nulo", "nulo");
+                    LogIn(Profile.getCurrentProfile());
                     ivLoginButton.setEnabled(false);
                 } else {
                     Animation a = new Animation() {
@@ -243,26 +210,62 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void LogIn(Profile profile, final String email, final String gender) {
+    public void LogIn(Profile profile) {
 
-        new GraphRequest(
+        GraphRequest request = GraphRequest.newMeRequest(
                 AccessToken.getCurrentAccessToken(),
-                "/" + profile.getId() + "/friends",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.v("LoginActivity", response.toString());
+
+                        // Application code
+
+
                         try {
-                            JSONArray data = response.getJSONObject().getJSONArray("data");
+
+                            String email = object.getString("email");
+                            String gender = object.getString("gender");
+                            String birthday = object.getString("birthday");
+                            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", new Locale("es", "es"));
+                            Date date = null;
+                            try {
+                                date = format.parse(birthday);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            DateFormat dateFormatter = new java.text.SimpleDateFormat("yyyy-MM-dd", new Locale("es", "es"));
+                            birthday = dateFormatter.format(date);
+
+                            String total_friends = "nulo";
+                            JSONArray friends_data = new JSONArray();
+                            try {
+                                friends_data = (new JSONObject(object.getString("friends"))).getJSONArray("data");
+                                total_friends = String.valueOf(((new JSONObject(object.getString("friends"))).getJSONObject("summary")).getInt("total_count"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                             LoginTask13 loginTask = new LoginTask13(mContext, pbLogin, tvLogin, ivLoginButton);
-                            loginTask.execute(data.toString(), email, gender,data.length());
+                            loginTask.execute(friends_data.toString(), email, gender, friends_data.length(), birthday, total_friends);
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Log.e("JSONException",e.toString());
                         }
                     }
-                }
-        ).executeAsync();
+
+                });
+        Bundle permissions = new Bundle();
+        permissions.putString("fields", "email,gender,birthday,friends");
+        request.setParameters(permissions);
+
+        if (!AccessToken.getCurrentAccessToken().getPermissions().contains("user_birthday")) {
+            LoginManager.getInstance().logOut();
+            loginButton.performClick();
+        } else {
+            request.executeAsync();
+        }
+
 
     }
 }
