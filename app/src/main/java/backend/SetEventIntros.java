@@ -59,7 +59,6 @@ public class SetEventIntros extends AsyncTask<Object, String, String> {
         String responseString = null;
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 
 
         try {

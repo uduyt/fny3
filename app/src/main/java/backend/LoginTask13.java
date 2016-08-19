@@ -73,6 +73,8 @@ public class LoginTask13 extends AsyncTask<Object, String, String> {
                     .appendQueryParameter("gender", (String) params[2])
                     .appendQueryParameter("friends_data", (String) params[0])
                     .appendQueryParameter("friends_length", String.valueOf(params[3]))
+                    .appendQueryParameter("birthday", String.valueOf(params[4]))
+                    .appendQueryParameter("total_friends", String.valueOf(params[5]))
                     .appendQueryParameter("version", mContext.getString(R.string.str_version_number))
                     .build().toString();
 
@@ -85,10 +87,8 @@ public class LoginTask13 extends AsyncTask<Object, String, String> {
             e.printStackTrace();
         }
 
-
-        return convertStreamToString(is);
-
-
+        String result = convertStreamToString(is);
+        return result;
     }
 
     @Override

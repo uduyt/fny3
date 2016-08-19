@@ -308,6 +308,7 @@ public class Event {
                 tvPrice.setText("gratis");
             }else
             tvPrice.setText(String.valueOf(event.getPrice())+"€");
+
             SimpleDateFormat dateFormat = new SimpleDateFormat("d   EEE", new Locale("es", "es"));
             String date=(dateFormat.format(event.getDate())).toUpperCase();
             tvDate.setText(date.substring(0,date.length()-1));
