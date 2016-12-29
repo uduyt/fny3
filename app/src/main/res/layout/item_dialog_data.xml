@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="30dp"
-    android:background="@color/colorPrimary"
+
     android:orientation="vertical">
 
     <TextView
@@ -13,14 +13,14 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="6dp"
         android:text="Persona 1"
-        android:textColor="@color/White"/>
+        android:textColor="@color/colorPrimaryText"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/til_data_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
-        android:textColorHint="#70ffffff"
+        android:textColorHint="#70000000"
         android:layout_marginLeft="24dp">
 
         <EditText
@@ -28,9 +28,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nombre"
-            android:textColorHint="@color/White"
-            android:theme="@style/MyAccentRadioButton"
-            android:textColor="@color/White"/>
+            android:theme="@style/til_style"
+            android:textColorHint="@color/colorPrimaryText"
+            android:textColor="@color/colorPrimaryText"/>
 
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
@@ -38,17 +38,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
-        android:textColorHint="#70ffffff"
+        android:textColorHint="#70000000"
         android:layout_marginLeft="24dp">
 
         <EditText
             android:id="@+id/et_data_second_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/til_style"
             android:hint="Apellidos"
-            android:textColorHint="@color/White"
-            android:theme="@style/MyAccentRadioButton"
-            android:textColor="@color/White"/>
+            android:textColorHint="@color/colorPrimaryText"
+            android:textColor="@color/colorPrimaryText"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -56,7 +56,7 @@
         android:id="@+id/til_data_dni"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="#70ffffff"
+        android:textColorHint="#70000000"
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="24dp">
 
@@ -64,10 +64,10 @@
             android:id="@+id/et_data_dni"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/til_style"
             android:hint="DNI"
-            android:textColorHint="@color/White"
-            android:theme="@style/MyAccentRadioButton"
-            android:textColor="@color/White"/>
+            android:textColorHint="@color/colorPrimaryText"
+            android:textColor="@color/colorPrimaryText"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -75,7 +75,8 @@
         android:id="@+id/til_data_dob"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="#70ffffff"
+        android:theme="@style/til_style"
+        android:textColorHint="#70000000"
         android:layout_marginLeft="24dp">
 
         <EditText
@@ -83,9 +84,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Fecha de Nacimiento"
-            android:textColorHint="@color/White"
-            android:theme="@style/MyAccentRadioButton"
-            android:textColor="@color/White"/>
+            android:textColorHint="@color/colorPrimaryText"
+            android:theme="@style/MyRadioButton"
+            android:textColor="@color/colorPrimaryText"/>
 
     </android.support.design.widget.TextInputLayout>
 

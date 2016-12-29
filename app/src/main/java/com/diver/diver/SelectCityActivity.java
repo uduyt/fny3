@@ -30,7 +30,7 @@ public class SelectCityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_city);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_main);
-
+        myToolbar.setTitle("Selecciona una ciudad");
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -49,9 +49,9 @@ public class SelectCityActivity extends AppCompatActivity {
 
 
         try {
-            Location location=null;
-            if(provider!=null){
-                location= mLocationManager.getLastKnownLocation(provider);
+            Location location = null;
+            if (provider != null) {
+                location = mLocationManager.getLastKnownLocation(provider);
             }
 
             SharedPreferences.Editor editor = sharedPref.edit();
@@ -94,7 +94,7 @@ public class SelectCityActivity extends AppCompatActivity {
         }
 
         ProgressBar pbSelectCity = (ProgressBar) findViewById(R.id.pb_select_cities);
-        CityAdapter mAdapter= new CityAdapter(new ArrayList<Bundle>(),this);
+        CityAdapter mAdapter = new CityAdapter(new ArrayList<Bundle>(), this);
         SetCities setCities = new SetCities(this, rvCities, mAdapter, pbSelectCity);
         setCities.execute();
     }

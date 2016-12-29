@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.diver.diver">
+
     <supports-screens android:anyDensity="true" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
+        android:configChanges="keyboardHidden|orientation|screenSize"
         android:icon="@mipmap/marker_diver"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:screenOrientation="portrait"
-        android:configChanges="keyboardHidden|orientation|screenSize"
-        android:theme="@style/AppTheme"
-        >
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
 
-       <!-- <receiver
+        <!--
+        <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND">
@@ -43,7 +49,8 @@
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
-        </service>-->
+        </service>
+        -->
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -51,8 +58,7 @@
 
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -61,14 +67,13 @@
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
-            android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.facebook.CustomTabActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -82,28 +87,43 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" >
-
+            android:theme="@style/AppTheme">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="www.android.com" />
-                <data android:scheme="https" android:host="www.android.com" />
+
+                <data
+                    android:host="www.android.com"
+                    android:scheme="http" />
+                <data
+                    android:host="www.android.com"
+                    android:scheme="https" />
             </intent-filter>
-
-            </activity>
-
+        </activity>
         <activity
             android:name=".SelectCityActivity"
             android:label="@string/title_activity_select_city"
-            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.diver.diver.MainActivity" />
         </activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
     </application>
 
 </manifest>

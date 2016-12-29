@@ -8,7 +8,22 @@
     <string name="shared_transition_string_fab">shared_element_transition_event_detail_fab</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="str_version_number">13</string>
+    <string name="str_version_number">14</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_select_city">SelectCityActivity</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="disco_sample">La sala Arena de Madrid es una de las discotecas más emblemáticas de la capital. Conocida anteriormente como Sala Marco Aldany o Sala Heineken, en septiembre de 2016 vuelve a retomar su nombre original, el de Sala Arena.
+
+Se caracteriza por las diferentes sesiones que realizan los jueves, viernes y sábados.
+
+Esta temporada siguen los el Fiestón Canario los jueves que se caracteriza por ser una fiesta de música comercial y pachangueo a la que acuden cientos de universitarios.
+
+Los viernes actualmente cuenta con la sesión de Techno EKHO. Una de las citas semanales para los amantes de esta música. Por esta fiesta pasan artistas nacionales e internacionales.
+
+Con nosotros podrás apuntarte en listas para entrar gratis o con los mejores precios, dependiendo de la fiesta o reservar tus botellas.
+
+No faltes a tu cita y ponte en contacto con nosotros, te informaremos encantados en el 634533093.</string>
+    <string name="lorem" >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi hendrerit lorem eget vehicula ullamcorper. Cras enim metus, efficitur tincidunt faucibus placerat, fermentum sed tortor. Maecenas porta orci et gravida condimentum. Suspendisse varius, lectus et sodales pulvinar, dui arcu pharetra nisl, nec vehicula dolor lorem sit amet lorem. Proin eu libero in lectus consequat fermentum. Proin vel hendrerit enim. Integer ac accumsan nulla. Maecenas ac ornare orci, id auctor risus. Morbi non mi est. Sed viverra odio sit amet sagittis varius. Phasellus euismod sit amet nisi quis pretium. In laoreet metus quis turpis tempus, id vestibulum neque vulputate. Ut venenatis, purus et ultrices consequat, eros est venenatis dui, a interdum arcu metus at tellus.
+
+Vivamus mattis neque eget ipsum egestas, sed vestibulum velit vestibulum. Quisque congue ultricies sapien, at elementum magna convallis at. Mauris egestas placerat neque sed porta. Sed tincidunt fringilla ipsum a finibus. Nunc vel risus ullamcorper, vestibulum ex id, aliquam leo. In varius eleifend condimentum. Suspendisse cursus mi at sem volutpat, quis placerat magna pellentesque. Nam et interdum mi. Nunc posuere, risus id feugiat elementum, purus massa dapibus mauris, eu lobortis purus ligula ac massa. Duis imperdiet suscipit dapibus. Aenean vitae mi metus. Nulla ut est sit amet tellus mattis maximus. Phasellus elementum mi eu libero iaculis euismod.</string>
 </resources>

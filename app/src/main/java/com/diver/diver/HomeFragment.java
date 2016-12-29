@@ -30,10 +30,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import backend.Analytics;
+import backend.City;
 import backend.GetCity;
 import backend.SetEventIntros;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements City {
     private static android.support.v7.widget.Toolbar myToolbar;
     private MainActivity mainActivity;
     private RecyclerView recyclerView;
@@ -174,6 +175,11 @@ public class HomeFragment extends Fragment {
         }
 
         return myView;
+    }
+
+    @Override
+    public void setCity(String city) {
+        SetEventIntros(extras.getString(city, "1"));
     }
 
     public void SetEventIntros(String city) {

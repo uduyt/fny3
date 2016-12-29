@@ -8,10 +8,12 @@
     <color name="colorPrimary200">#80CBC4</color>
     <color name="colorPrimaryDark">#00796B</color>
     <color name="colorAccent">#FFC107</color>
+    <color name="colorBlue">#009688</color>
     <color name="colorPrimaryText">#212121</color>
-    <color name="colorSecondaryText">#727272</color>
+    <color name="colorSecondaryText">#888888</color>
     <color name="colorDivider">#B6B6B6</color>
     <color name="colorDate">#cfcccc</color>
+    <color name="colorBack">#dadada</color>
     <color name="White">#FFFFFF</color>
     <color name="facebook">#3b5998</color>
     <color name="google">#d34836</color>

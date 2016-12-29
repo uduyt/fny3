@@ -2,26 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_item_city"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:background="?android:attr/selectableItemBackground"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="4dp"
+    android:layout_gravity="center"
+    android:background="@color/colorPrimary"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <ImageView
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="12dp"
-        android:src="@drawable/ic_location_city_black_24dp"/>
+        android:id="@+id/iv_city_image"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+         />
+
     <TextView
         android:id="@+id/tv_city_name"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:padding="14dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="12dp"
         android:text="El Puerto de Santa María"
-        android:textColor="#c0000000"
-        android:textSize="18sp" />
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="13sp" />
 </LinearLayout>

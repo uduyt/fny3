@@ -138,7 +138,7 @@ public class SetEventFull extends AsyncTask<Object, String, String> {
                     mEvent.setCachimba(event_json.getString("cachimba"));
                     mEvent.setReservado(event_json.getString("reservado"));
                     mEvent.setSmokeArea(Integer.valueOf(event_json.getString("smoke_area")));
-                    mEvent.setTerrace(Integer.valueOf(event_json.getString("terrace")));
+                    mEvent.setHanger(Integer.valueOf(event_json.getString("hanger")));
                     mEvent.setMaxYears(event_json.getString("max_age"));
                     mEvent.setPromo(Integer.valueOf(event_json.getString("promo_enabled")));
 

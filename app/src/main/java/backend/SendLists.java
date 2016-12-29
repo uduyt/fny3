@@ -88,6 +88,9 @@ public class SendLists extends AsyncTask<Object, String, String> {
         if (mEntry.getString("payment_last_4") == null) {
             mEntry.putString("payment_last_4", "none");
         }
+        if (mEntry.getString("payment") == null) {
+            mEntry.putString("payment", "none");
+        }
 
         try {
             final String REQUEST_BASE_URL;
@@ -104,6 +107,7 @@ public class SendLists extends AsyncTask<Object, String, String> {
                     .appendQueryParameter("data", mEntry.getString("data"))
                     .appendQueryParameter("contact_data", mEntry.getString("contact_data"))
                     .appendQueryParameter("promo_code", mEntry.getString("promo_code"))
+                    .appendQueryParameter("payment", mEntry.getString("payment"))
                     .appendQueryParameter("payment_method", mEntry.getString("payment_method"))
                     .appendQueryParameter("payment_token", mEntry.getString("payment_token"))
                     .appendQueryParameter("payment_last_4", mEntry.getString("payment_last_4"))

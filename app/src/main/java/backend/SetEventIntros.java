@@ -121,15 +121,16 @@ public class SetEventIntros extends AsyncTask<Object, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        tvCity = (TextView) mView.findViewById(R.id.tv_toolbar_title);
+        //tvCity = (TextView) mView.findViewById(R.id.tv_toolbar_title);
         mProgressBar.setVisibility(View.GONE);
 
         if (result != null) {
             result = result.replace("\\u0080", "€");
             try {
+                tvCity= (TextView) mView.findViewById(R.id.tv_city_title);
                 String cityName = (new JSONObject(result)).getString("city_name");
                 String cityId = (new JSONObject(result)).getString("city_id");
-                tvCity.setText(cityName);
+                tvCity.setText(cityName.toUpperCase());
 
                 JSONArray events_json = (new JSONObject(result)).getJSONArray("data");
                 JSONObject event_json;
@@ -146,6 +147,7 @@ public class SetEventIntros extends AsyncTask<Object, String, String> {
                     event.setClubName(event_json.getString("club_name"));
                     event.setLat(Float.valueOf(event_json.getString("lat")));
                     event.setLong(Float.valueOf(event_json.getString("long")));
+                    event.setAddress((event_json.getString("address")));
                     event.setCityId(cityId);
 
                     Events.add(event);

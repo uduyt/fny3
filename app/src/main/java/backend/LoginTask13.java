@@ -116,7 +116,7 @@ public class LoginTask13 extends AsyncTask<Object, String, String> {
             } else if (result.equals("update")) {
                 Toast.makeText(mContext, "Debes actualizar la aplicación", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=com.diver.diver"));
+                intent.setData(Uri.parse("market://details?id=com.diverapp.diver"));
                 Analytics analytics = new Analytics(mContext);
                 analytics.execute("to_update", "none");
                 mContext.startActivity(intent);

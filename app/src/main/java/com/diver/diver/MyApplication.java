@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.paypal.android.sdk.payments.PayPalConfiguration;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

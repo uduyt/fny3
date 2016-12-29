@@ -42,6 +42,7 @@ import java.util.Locale;
 import backend.Analytics;
 import backend.AskPromoCode;
 import backend.SetEventFull;
+import jp.wasabeef.blurry.Blurry;
 
 public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffsetChangedListener, NestedScrollView.OnScrollChangeListener {
     private Event mEvent;
@@ -62,7 +63,6 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
     private int marginLeftCv = 14;
     private int marginLeftCvTv;
     private int toolbarMarginLeft = 0;
-    private CardView cvData;
     private Toolbar myToolbar;
     private MaterialDialog progressDialog;
     private BottomSheetBehavior mBottomSheetBehaviour;
@@ -77,8 +77,9 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
     private String orderType = "normal";
     private EntryAdapter mAdapter;
     private Bundle mEntry;
-    private View vCover;
+    private View vCover, vCover2;
     private ProgressBar pbEventDetail;
+    private ViewGroup clDetail;
 
     @Nullable
     @Override
@@ -115,7 +116,6 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
         toolbarMarginLeft = StaticUtilities.convertDpToPixel((float) toolbarMarginLeft, getActivity());
 
         cl = (CoordinatorLayout) myView.findViewById(R.id.cl_event_detail);
-        cvData = (CardView) myView.findViewById(R.id.cv_event_data);
         collapsingToolbarLayout = (CollapsingToolbarLayout) myView.findViewById(R.id.ctl_toolbar_layout);
         collapsingToolbarLayout.setTitle("");
         myToolbar.setTitle("");
@@ -126,14 +126,14 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
         tvDateText = (TextView) myView.findViewById(R.id.tv_event_detail_date_text);
         tvMusic = (TextView) myView.findViewById(R.id.tv_event_detail_music);
         tvDJ = (TextView) myView.findViewById(R.id.tv_event_detail_dj);
-        tvCvName = (TextView) myView.findViewById(R.id.tv_name);
+        //tvCvName = (TextView) myView.findViewById(R.id.tv_name);
         tvDescription = (TextView) myView.findViewById(R.id.tv_event_description);
-        cvName = (CardView) myView.findViewById(R.id.cv_event_detail_name);
+        //cvName = (CardView) myView.findViewById(R.id.cv_event_detail_name);
         pbEventDetail = (ProgressBar) myView.findViewById(R.id.pb_event_detail);
 
         //*set Views and Layouts
-
-        tvCvName.setText(mEvent.getName());
+        clDetail = (ViewGroup) myView.findViewById(R.id.cl_market_detail);
+        //tvCvName.setText(mEvent.getName());
         tvClubName.setText(mEvent.getClubName());
 
         mEntry = new Bundle();
@@ -144,7 +144,7 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
         RecyclerView mRecyclerView = (RecyclerView) myView.findViewById(R.id.rv_entries);
         mAdapter = new EntryAdapter(new ArrayList<Bundle>(), getActivity(), this);
 
-        SetEventFull setEntries = new SetEventFull(getActivity(),mEvent, this, mRecyclerView, mAdapter);
+        SetEventFull setEntries = new SetEventFull(getActivity(), mEvent, this, mRecyclerView, mAdapter);
         setEntries.execute(mEvent.getEventID());
 
         return myView;
@@ -154,50 +154,18 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewTreeObserver vto = myView.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-
-                CardView.LayoutParams cvParams = (CardView.LayoutParams) tvCvName.getLayoutParams();
-                marginLeftCvTv = (cvName.getWidth() - tvCvName.getWidth()) / 2;
-                cvParams.leftMargin = marginLeftCvTv;
-                tvCvName.setLayoutParams(cvParams);
-
-                collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor("#ffffff"));
-
-                appBarLayout = (AppBarLayout) cl.findViewById(R.id.app_bar);
-                NestedScrollView nestedScrollView = (NestedScrollView) cl.findViewById(R.id.nsv_event_detail);
-                nestedScrollView.setOnScrollChangeListener(mContext);
-                mMaxScrollSize = appBarLayout.getTotalScrollRange();
-                appBarLayout.addOnOffsetChangedListener(mContext);
-                ViewTreeObserver obs = myView.getViewTreeObserver();
-                obs.removeOnGlobalLayoutListener(this);
-
-                maxHeightCv = cvName.getHeight();
-                maxTopMarginCv = appBarLayout.getHeight() - maxHeightCv / 2;
-                toolbarHeightCv = myToolbar.getHeight();
-            }
-        });
     }
 
-    public void LoadData(Event event){
+    public void LoadData(Event event) {
 
         //Set Views and Layouts
         ImageView ivCollapsing = (ImageView) myView.findViewById(R.id.iv_collapsing_toolbar);
         ImageView ivMap = (ImageView) myView.findViewById(R.id.iv_static_map);
 
-        FrameLayout flCachimba = (FrameLayout) myView.findViewById(R.id.fl_cachimba);
-        FrameLayout flReservado = (FrameLayout) myView.findViewById(R.id.fl_reservado);
-        FrameLayout flFumar = (FrameLayout) myView.findViewById(R.id.fl_fumar);
-        FrameLayout flTerraza = (FrameLayout) myView.findViewById(R.id.fl_terraza);
-
-        ImageView ivTerraza = (ImageView) myView.findViewById(R.id.iv_terraza);
-        ImageView ivCachimba = (ImageView) myView.findViewById(R.id.iv_cachimba);
-        ImageView ivFumar = (ImageView) myView.findViewById(R.id.iv_fumar);
-        ImageView ivReservado = (ImageView) myView.findViewById(R.id.iv_reservado);
-        //*Set Views and Layouts
+        View vCachimba = myView.findViewById(R.id.v_cover_cachimba);
+        View vReservado = myView.findViewById(R.id.v_cover_vip);
+        View vFumar = myView.findViewById(R.id.v_cover_smoke);
+        View vHanger = myView.findViewById(R.id.v_cover_hanger);
 
         mSlidingUpPanelLayout = (SlidingUpPanelLayout) myView.findViewById(R.id.spl_drawer);
         myView.findViewById(R.id.ll_bottom_drawer).setVisibility(View.VISIBLE);
@@ -206,17 +174,21 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
         //mSlidingUpPanelLayout.setPanelHeight(mSlidingUpPanelLayout.getHeight());
 
         vCover = myView.findViewById(R.id.v_cover);
-        vCover.setOnClickListener(new View.OnClickListener() {
+        vCover2 = myView.findViewById(R.id.v_cover2);
+        vCover2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 vCover.setVisibility(View.GONE);
+                vCover2.setVisibility(View.GONE);
+                Blurry.delete(clDetail);
             }
         });
 
-        mEvent=event;
+        mEvent = event;
         pbEventDetail.setVisibility(View.GONE);
         vCover.setVisibility(View.GONE);
+        vCover2.setVisibility(View.GONE);
 
         //load data
         myView.findViewById(R.id.ll_event_details).setVisibility(View.VISIBLE);
@@ -225,13 +197,14 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
         tvMusic.setText(mEvent.getMusic());
         tvDJ.setText(mEvent.getDJ());
 
-        if(mEvent.getMusic().equals("-1")) myView.findViewById(R.id.fl_event_detail_music).setVisibility(View.GONE);
+        if (mEvent.getMusic().equals("-1"))
+            myView.findViewById(R.id.fl_event_detail_music).setVisibility(View.GONE);
         else myView.findViewById(R.id.fl_event_detail_music).setVisibility(View.VISIBLE);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d 'de' MMMM", new Locale("es", "es"));
         tvDate.setText((dateFormat.format(mEvent.getDate())));
         tvDateText.setText(mEvent.getDateText());
-
+        ((TextView) myView.findViewById(R.id.tv_map_direction)).setText(mEvent.getAddress());
         Picasso.with(getActivity()).load("http://diverapp.es/clubs/images/" + mEvent.getEventID() + "event_image.jpg").into(ivCollapsing);
 
         String url = "http://maps.googleapis.com/maps/api/staticmap?center="
@@ -255,27 +228,23 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
             }
         });
 
-        if (mEvent.getCachimba().equals("-1")) flCachimba.setVisibility(View.GONE);
-        if (mEvent.getReservado().equals("-1")) flReservado.setVisibility(View.GONE);
-        if (mEvent.getTerrace() == -1) flTerraza.setVisibility(View.GONE);
-        if (mEvent.getSmokeArea() == -1) flFumar.setVisibility(View.GONE);
-
         if (mEvent.getSmokeArea() == 0) {
-            ivFumar.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_highlight_off_black_24dp));
+            vFumar.setVisibility(View.VISIBLE);
         } else
-            ivFumar.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_done_green_24dp));
-        if (mEvent.getTerrace() == 0)
-            ivTerraza.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_highlight_off_black_24dp));
+            vFumar.setVisibility(View.GONE);
+        if (mEvent.getHanger() == 0)
+            vHanger.setVisibility(View.VISIBLE);
         else
-            ivTerraza.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_done_green_24dp));
+            vHanger.setVisibility(View.GONE);
         if (mEvent.getReservado().equals("0"))
-            ivReservado.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_highlight_off_black_24dp));
+            vReservado.setVisibility(View.VISIBLE);
         else
-            ivReservado.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_done_green_24dp));
+            vReservado.setVisibility(View.GONE);
         if (mEvent.getCachimba().equals("0"))
-            ivCachimba.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_highlight_off_black_24dp));
+            vCachimba.setVisibility(View.VISIBLE);
         else
-            ivCachimba.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_done_green_24dp));
+            vCachimba.setVisibility(View.GONE);
+
 
         mMaxPeople = mEvent.getMaxPeople();
         //*load data
@@ -283,17 +252,6 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
         mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 
         setGetTicketsDialog();
-    }
-
-
-    public static void setMargins(View v, int l, int t, int r, int b, int h, int w) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            p.height = h;
-            p.width = w;
-            v.requestLayout();
-        }
     }
 
     @Override
@@ -305,35 +263,6 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
 
-        float currentScrollPercentage = Math.abs(((verticalOffset * 100f / mMaxScrollSize) / 100f));
-
-        //Title to Toolbar
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) cvName.getLayoutParams();
-        params.topMargin = (int) (maxTopMarginCv * (1 - currentScrollPercentage));
-        params.height = (int) ((toolbarHeightCv - maxHeightCv) * currentScrollPercentage + maxHeightCv);
-        params.leftMargin = (int) (marginLeftCv * (1 - currentScrollPercentage));
-        params.rightMargin = (int) (marginRightCv * (1 - currentScrollPercentage));
-        cvName.setLayoutParams(params);
-
-        CardView.LayoutParams cvParams = (CardView.LayoutParams) tvCvName.getLayoutParams();
-        cvParams.leftMargin = (int) ((toolbarMarginLeft - marginLeftCv) * currentScrollPercentage + marginLeftCvTv);
-        tvCvName.setLayoutParams(cvParams);
-
-        LinearLayout.LayoutParams clParams = (LinearLayout.LayoutParams) cvData.getLayoutParams();
-        //clParams.topMargin = (int) (StaticUtilities.convertDpToPixel(15, getActivity()) * (1 - currentScrollPercentage) + StaticUtilities.convertDpToPixel(25, getActivity()));
-        cvData.setLayoutParams(clParams);
-
-        if (currentScrollPercentage >= 0.97) {
-            collapsingToolbarLayout.setContentScrimColor(getActivity().getResources().getColor(R.color.colorPrimary));
-            ((TextView) myView.findViewById(R.id.tv_toolbar_title)).setText(mEvent.getName());
-            myToolbar.setTitle("");
-            cvName.setVisibility(View.GONE);
-
-        } else {
-            collapsingToolbarLayout.setContentScrimColor(Color.TRANSPARENT);
-            ((TextView) myView.findViewById(R.id.tv_toolbar_title)).setText("");
-            cvName.setVisibility(View.VISIBLE);
-        }
     }
 
     public String getCityId() {
@@ -344,7 +273,6 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
 
     private void setGetTicketsDialog() {
 
-
         FrameLayout flTicket = (FrameLayout) myView.findViewById(R.id.fl_get_tickets);
         flTicket.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -352,14 +280,13 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
                 Analytics analytics = new Analytics(getActivity());
                 analytics.execute("press_event_detail_get_ticket", "int", String.valueOf(mEvent.getEventID()));
                 mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                vCover.setVisibility(View.VISIBLE);
+                Blurry.with(getActivity()).radius(8).animate(500).onto(clDetail);
+                vCover2.setVisibility(View.VISIBLE);
             }
         });
 
-        if(mEvent.getPromo()==0)
+        if (mEvent.getPromo() == 0)
             myView.findViewById(R.id.ll_promo).setVisibility(View.GONE);
-
-
 
         mPeople = 1;
         tvNumber = (TextView) myView.findViewById(R.id.tv_number);
@@ -431,7 +358,7 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
                 ProgressBar pbPromo = (ProgressBar) myView.findViewById(R.id.pb_promo);
                 mPromoCode = etPromoCode.getText().toString();
 
-                mEntry.putString("promo_code",mPromoCode);
+                mEntry.putString("promo_code", mPromoCode);
                 TextInputLayout tilPromo = (TextInputLayout) myView.findViewById(R.id.til_promo_code);
 
                 AskPromoCode askPromoCode = new AskPromoCode(getActivity(), tvPromoDescription, tvTotal, pbPromo, tvPromoUse, mContext, tilPromo);
@@ -451,8 +378,8 @@ public class EventDetailFragment extends Fragment implements AppBarLayout.OnOffs
                     mEntry.putString("max_years", mEvent.getMaxYears());
                     Bundle bundle = new Bundle();
                     bundle.putString("city", mEvent.getCityId());
-                    ((MainActivity) getActivity()).GoToFragment("home", bundle);
-                    ((MainActivity) getActivity()).ShowOrderDialog(mEntry, mEvent);
+
+                    ((MainActivity) getActivity()).GetData(mEntry, mEvent);
                 }
             }
         });

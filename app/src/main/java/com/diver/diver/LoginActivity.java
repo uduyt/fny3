@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -124,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
                             Log.v("facebook - profile", profile2.getFirstName());
                             mProfileTracker.stopTracking();
                             LogIn(profile2);
-
                         }
                     };
                     mProfileTracker.startTracking();
@@ -133,7 +135,6 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     final Profile profile = Profile.getCurrentProfile();
                     LogIn(profile);
-
                 }
             }
 
@@ -212,61 +213,71 @@ public class LoginActivity extends AppCompatActivity {
 
     public void LogIn(Profile profile) {
 
-        GraphRequest request = GraphRequest.newMeRequest(
-                AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.v("LoginActivity", response.toString());
-
-                        // Application code
+        if (isNetworkAvailable()) {
 
 
-                        try {
+            GraphRequest request = GraphRequest.newMeRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject object, GraphResponse response) {
+                            Log.v("LoginActivity", response.toString());
 
-                            String email = object.getString("email");
-                            String gender = object.getString("gender");
-                            String birthday = object.getString("birthday");
-                            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", new Locale("es", "es"));
-                            Date date = null;
+                            // Application code
+
                             try {
-                                date = format.parse(birthday);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+                                String email = object.getString("email");
+                                String gender = object.getString("gender");
+                                String birthday = object.getString("birthday");
+                                SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", new Locale("es", "es"));
+                                Date date = null;
+                                try {
+                                    date = format.parse(birthday);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
 
-                            DateFormat dateFormatter = new java.text.SimpleDateFormat("yyyy-MM-dd", new Locale("es", "es"));
-                            birthday = dateFormatter.format(date);
+                                DateFormat dateFormatter = new java.text.SimpleDateFormat("yyyy-MM-dd", new Locale("es", "es"));
+                                birthday = dateFormatter.format(date);
 
-                            String total_friends = "nulo";
-                            JSONArray friends_data = new JSONArray();
-                            try {
-                                friends_data = (new JSONObject(object.getString("friends"))).getJSONArray("data");
-                                total_friends = String.valueOf(((new JSONObject(object.getString("friends"))).getJSONObject("summary")).getInt("total_count"));
+                                String total_friends = "nulo";
+                                JSONArray friends_data = new JSONArray();
+                                try {
+                                    friends_data = (new JSONObject(object.getString("friends"))).getJSONArray("data");
+                                    total_friends = String.valueOf(((new JSONObject(object.getString("friends"))).getJSONObject("summary")).getInt("total_count"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                LoginTask13 loginTask = new LoginTask13(mContext, pbLogin, tvLogin, ivLoginButton);
+                                loginTask.execute(friends_data.toString(), email, gender, friends_data.length(), birthday, total_friends);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
-                            LoginTask13 loginTask = new LoginTask13(mContext, pbLogin, tvLogin, ivLoginButton);
-                            loginTask.execute(friends_data.toString(), email, gender, friends_data.length(), birthday, total_friends);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    }
 
-                });
-        Bundle permissions = new Bundle();
-        permissions.putString("fields", "email,gender,birthday,friends");
-        request.setParameters(permissions);
+                    });
 
-        if (!AccessToken.getCurrentAccessToken().getPermissions().contains("user_birthday")) {
-            LoginManager.getInstance().logOut();
-            loginButton.performClick();
+            Bundle permissions = new Bundle();
+            permissions.putString("fields", "email,gender,birthday,friends");
+            request.setParameters(permissions);
+
+            if (!AccessToken.getCurrentAccessToken().getPermissions().contains("user_birthday")) {
+                LoginManager.getInstance().logOut();
+                loginButton.performClick();
+            } else {
+                request.executeAsync();
+            }
         } else {
-            request.executeAsync();
+            Snackbar.make(findViewById(R.id.ll_container), "Se ha producido un error en la red", Snackbar.LENGTH_LONG).show();
         }
+    }
 
-
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
 

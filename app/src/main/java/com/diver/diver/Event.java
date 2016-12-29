@@ -36,7 +36,8 @@ public class Event {
     private float Long;
     private String CityId;
     private String Cachimba;
-    private Integer Terrace;
+    private String Address;
+    private Integer Hanger;
     private Integer SmokeArea;
     private String Reservado;
     private int MaxPeople;
@@ -64,6 +65,14 @@ public class Event {
 
     public Integer getPromo() {
         return Promo;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
     }
 
     public void setPromo(Integer promo) {
@@ -122,8 +131,6 @@ public class Event {
         Club = club;
     }
 
-
-
     public String getCachimba() {
         return Cachimba;
     }
@@ -132,12 +139,12 @@ public class Event {
         Cachimba = cachimba;
     }
 
-    public Integer getTerrace() {
-        return Terrace;
+    public Integer getHanger() {
+        return Hanger;
     }
 
-    public void setTerrace(Integer terrace) {
-        Terrace = terrace;
+    public void setHanger(Integer hanger) {
+        Hanger = hanger;
     }
 
     public Integer getSmokeArea() {

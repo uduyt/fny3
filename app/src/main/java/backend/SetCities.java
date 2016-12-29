@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -137,7 +138,7 @@ public class SetCities extends AsyncTask<Object, String, String> {
 
                 mAdapter = new CityAdapter(cities, mContext);
 
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext,2);
                 mRecyclerView.setLayoutManager(mLayoutManager);
                 mRecyclerView.setItemAnimator(new DefaultItemAnimator());
                 mRecyclerView.setAdapter(mAdapter);

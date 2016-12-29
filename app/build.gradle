@@ -10,12 +10,13 @@ android {
     repositories {
         mavenCentral()
     }
+
     defaultConfig {
-        applicationId "com.diver.diver"
+        applicationId "com.diverapp.diver"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 13
-        versionName "1.0.0"
+        versionCode 14
+        versionName "2.0.0"
         multiDexEnabled true
     }
     buildTypes {
@@ -28,20 +29,29 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'com.jakewharton:butterknife:8.1.0'
-    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
-    compile 'com.sothree.slidinguppanel:library:3.3.0'
-    compile 'com.paypal.sdk:paypal-android-sdk:2.14.4'
-    compile 'com.google.android.gms:play-services:9.4.0'
-    compile 'com.stripe:stripe-android:+'
-    compile 'com.android.support:multidex:1.0.0'
-    compile ('com.android.support:support-v4:24.0.0'){
+    compile('com.android.support:support-v4:24.2.1') {
         force = true;
     }
+    compile 'com.google.android.gms:play-services-ads:9.8.0'
+    compile 'com.google.android.gms:play-services-identity:9.8.0'
+    compile 'com.google.android.gms:play-services-gcm:9.8.0'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.aakira:expandable-layout:1.6.0@aar'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'jp.wasabeef:blurry:2.0.3'
+    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
+    compile 'com.sothree.slidinguppanel:library:3.3.0'
+    compile 'com.google.android.gms:play-services:9.8.0'
+    compile 'com.stripe:stripe-android:+'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.ms-square:expandableTextView:0.1.4'
+    compile ('com.github.florent37:materialviewpager:1.2.0@aar'){
+        transitive = true
+    }
+    testCompile 'junit:junit:4.12'
 }

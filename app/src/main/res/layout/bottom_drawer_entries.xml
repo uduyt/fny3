@@ -45,7 +45,7 @@
             android:id="@+id/fl_use_promo"
             android:layout_width="70dp"
             android:layout_height="40dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorBlue"
             android:gravity="center">
 
             <TextView
@@ -94,7 +94,7 @@
             android:layout_weight="1.2"
 
             android:translationZ="8dp"
-            card_view:cardBackgroundColor="@color/colorPrimary"
+            card_view:cardBackgroundColor="@color/colorBlue"
             card_view:cardCornerRadius="4dp"
             card_view:cardElevation="8dp"
             card_view:contentPaddingBottom="12dp"
@@ -212,6 +212,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
+                android:theme="@style/MyRadioButton"
                 android:src="@drawable/ic_remove_black_24dp"
                 app:fabSize="mini" />
 
@@ -229,6 +230,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
+                android:theme="@style/MyRadioButton"
                 android:src="@drawable/ic_add_black_24dp"
                 app:fabSize="mini" />
         </LinearLayout>
@@ -239,7 +241,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorBlue">
 
         <TextView
             android:id="@+id/tv_buy_tickets"

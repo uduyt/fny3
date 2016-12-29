@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left">
+
+            <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:elevation="5dp"
+                android:gravity="left" />
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="4dp"
+                android:text="Número de tarjeta"
+                android:textColor="@color/colorPrimaryText" />
+
+            <EditText
+                android:id="@+id/et_card_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="1234-5678-9123-4567"
+                android:inputType="number"
+                android:maxLength="19"
+                android:textColor="@color/colorPrimaryText"
+                android:textColorHint="#77000000"
+                android:theme="@style/ProgressBarStyle" />
+
+            <TextView
+                android:id="@+id/tv_card_number_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:text=""
+                android:textColor="@color/md_edittext_error" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="4dp"
+                        android:text="Fecha de caducidad"
+                        android:textColor="@color/colorPrimaryText" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_card_date_month"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:hint="MM"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:textColor="@color/colorPrimaryText"
+                            android:textColorHint="#77000000"
+                            android:theme="@style/ProgressBarStyle" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="/"
+                            android:textColor="@color/colorPrimaryText" />
+
+                        <EditText
+                            android:id="@+id/et_card_date_year"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:hint="YY"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:textColor="@color/colorPrimaryText"
+                            android:textColorHint="#77000000"
+                            android:theme="@style/ProgressBarStyle" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:paddingLeft="4dp"
+                        android:text="CVC"
+                        android:textColor="@color/colorPrimaryText" />
+
+
+                    <EditText
+                        android:id="@+id/et_card_cvc"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:hint="CVV"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textColorHint="#77000000"
+                        android:theme="@style/ProgressBarStyle" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_card_rest_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:text=""
+                android:textColor="@color/md_edittext_error" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Guardar"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="15sp" />
+
+                <CheckBox
+                    android:id="@+id/cb_card_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:theme="@style/ProgressBarStyle" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/bt_stripe_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorPrimary"
+                android:padding="15dp"
+                android:text="PAGAR con tarjeta"
+                android:textColor="#ffffff" />
+
+            <LinearLayout
+                android:id="@+id/ll_door_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="12dp"
+                    android:text="o" />
+
+                <Button
+                    android:id="@+id/bt_door_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:padding="15dp"
+                    android:text="Pagar en puerta"
+                    android:textColor="#ffffff"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_rrpp_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="12dp"
+                    android:text="o" />
+
+                <Button
+                    android:id="@+id/bt_rrpp_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:padding="16dp"
+                    android:text="Pagar a un RRPP"
+                    android:textColor="#ffffff" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

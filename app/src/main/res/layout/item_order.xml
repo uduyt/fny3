@@ -34,8 +34,7 @@
                 android:id="@+id/iv_order_pic"
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/rumbo_sur" />
+                android:scaleType="centerCrop"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

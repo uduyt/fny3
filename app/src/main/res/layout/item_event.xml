@@ -32,6 +32,7 @@
             android:scaleType="centerCrop"
             android:transitionName="@string/shared_transition_string_iv" />
 
+
         <LinearLayout
             android:id="@+id/ll_event_info"
             android:layout_width="match_parent"
@@ -85,20 +86,22 @@
                 android:textColor="@color/colorSecondaryText"
                 android:text="10€"
                 android:textSize="18sp" />
+
         </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_event_date"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="14dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="6dp"
+        android:layout_gravity="end"
         android:background="@drawable/circle_date"
-        app:backgroundTint="@color/colorAccent"
         android:gravity="center"
         android:padding="8dp"
         android:text="1 MAR"
         android:textColor="@color/White"
-        android:textSize="13sp"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:transitionName="@string/shared_transition_string_fab" />
 </android.support.v7.widget.CardView>

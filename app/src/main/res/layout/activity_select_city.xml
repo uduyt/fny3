@@ -2,31 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBack"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_main"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="5dp"
-        android:gravity="left"
-        android:maxHeight="20dp">
+        android:layout_height="?android:attr/actionBarSize">
 
-        <TextView
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="Selecciona tu ciudad..."
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="#ffffff"
+            android:elevation="5dp"
+            android:gravity="left"
+            android:maxHeight="20dp"
+            android:theme="@style/toolbar" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:elevation="5dp"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimary" />
 
-    </android.support.v7.widget.Toolbar>
+    </FrameLayout>
+
 
     <ProgressBar
         android:id="@+id/pb_select_cities"
-        style="@style/ProgressBarStyle"
+        android:theme="@style/ProgressBarStyle"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center" />

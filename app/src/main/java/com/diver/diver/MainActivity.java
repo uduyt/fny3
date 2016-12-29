@@ -19,6 +19,8 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -58,17 +60,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
-import com.paypal.android.sdk.payments.PayPalService;
-import com.paypal.android.sdk.payments.PaymentActivity;
-import com.paypal.android.sdk.payments.PaymentConfirmation;
 import com.squareup.picasso.Picasso;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
-import com.stripe.exception.AuthenticationException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,29 +103,13 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private static final int REQUEST_COARSE_LOCATION = 0;
 
-    private static PayPalConfiguration config = new PayPalConfiguration()
-
-            // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
-            // or live (ENVIRONMENT_PRODUCTION)
-
-            .environment(PayPalConfiguration.ENVIRONMENT_PRODUCTION) //live
-            .clientId("AShABEQ_UsfwJFzS_6ob5FPCJjenqCSFy5N4DmOkTKu_V0hWDgMPBjUH3UHJRB40mcua0cJ_jNVCLkzp"); //live
-
-            /*.environment(PayPalConfiguration.ENVIRONMENT_SANDBOX) //sandbox
-            .clientId("Ab4BTGKn8LXaRDm9qGfV68OwL4WZfCgyU4p6RjmijN0lIr5aFTBW3tzElTI-VHMXbuVLvRla4HcrU--j"); //sandbox*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //paypal
-        Intent intent = new Intent(this, PayPalService.class);
-
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-
-        startService(intent);
-        //*paypal
+        getSupportFragmentManager().addOnBackStackChangedListener(getListener());
 
         GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
             @Override
@@ -225,16 +205,16 @@ public class MainActivity extends AppCompatActivity
             }
         });
         if (getIntent().getExtras() != null) {
-            String fragment = getIntent().getExtras().getString("fragment", "home");
+            String fragment = getIntent().getExtras().getString("fragment", "clubs");
             Bundle extras = new Bundle();
-            if (fragment.equals("home")) {
+            if (fragment.equals("home") | fragment.equals("clubs")) {
                 extras.putString("city", getIntent().getExtras().getString("city", "none"));
             }
             GoToFragment(fragment, extras);
         } else {
             Bundle extras = new Bundle();
             extras.putString("city", "none");
-            GoToFragment("home", extras);
+            GoToFragment("clubs", extras);
         }
         sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
@@ -251,19 +231,23 @@ public class MainActivity extends AppCompatActivity
                 Bundle bundle = new Bundle();
                 bundle.putString("city", ((EventDetailFragment) getSupportFragmentManager().findFragmentById(R.id.container)).getCityId());
                 GoToFragment("home", bundle);
-
-
+            } else if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof ClubDetailFragment) {
+                Bundle bundle = new Bundle();
+                bundle.putString("city", ((ClubDetailFragment) getSupportFragmentManager().findFragmentById(R.id.container)).Club.getString("club_city"));
+                GoToFragment("clubs", bundle);
             }
         }
+
     }
 
     public void GoToFragment(String fragment, Bundle extras) {
+
+
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
         switch (fragment) {
             case "home":
-                default:
                 HomeFragment mFragment = new HomeFragment();
                 mFragment.setArguments(extras);
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -271,13 +255,22 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.replace(R.id.container, mFragment);
                 fragmentTransaction.commit();
                 break;
+            case "clubs":
+                ClubsFragment mClubsFragment = new ClubsFragment();
+                mClubsFragment.setArguments(extras);
+                FragmentTransaction clubsFragmentTransaction = getSupportFragmentManager().beginTransaction();
+                clubsFragmentTransaction.addToBackStack("home");
+                clubsFragmentTransaction.replace(R.id.container, mClubsFragment);
+                clubsFragmentTransaction.commit();
+                break;
+
             case "event_detail":
-                EventDetailFragment mEventFragment = new EventDetailFragment();
-                mEventFragment.setArguments(extras);
-                FragmentTransaction eventFragmentTransaction = getSupportFragmentManager().beginTransaction();
-                eventFragmentTransaction.addToBackStack("event_detail");
-                eventFragmentTransaction.replace(R.id.container, mEventFragment);
-                eventFragmentTransaction.commit();
+                EventDetailFragment mDetailFragment = new EventDetailFragment();
+                mDetailFragment.setArguments(extras);
+                FragmentTransaction eventfragmentTransaction = getSupportFragmentManager().beginTransaction();
+                eventfragmentTransaction.addToBackStack("event_detail");
+                eventfragmentTransaction.replace(R.id.container, mDetailFragment);
+                eventfragmentTransaction.commit();
                 break;
 
             case "discotecas":
@@ -317,6 +310,34 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
+    public void GoToClubDetail(Bundle club){
+        ClubDetailFragment mClubsFragment = new ClubDetailFragment();
+        mClubsFragment.Club=club;
+        FragmentTransaction clubsFragmentTransaction = getSupportFragmentManager().beginTransaction();
+        clubsFragmentTransaction.addToBackStack("home");
+        clubsFragmentTransaction.replace(R.id.container, mClubsFragment);
+        clubsFragmentTransaction.commit();
+    }
+
+    private FragmentManager.OnBackStackChangedListener getListener() {
+        FragmentManager.OnBackStackChangedListener result = new FragmentManager.OnBackStackChangedListener() {
+            public void onBackStackChanged() {
+                FragmentManager manager = getSupportFragmentManager();
+                if (manager != null) {
+                    int backStackEntryCount = manager.getBackStackEntryCount();
+                    if (backStackEntryCount == 0) {
+                        finish();
+                    }
+                    List<Fragment> fragments= manager.getFragments();
+                    if(fragments.size()==1) backStackEntryCount=0;
+                    Fragment fragment = manager.getFragments()
+                            .get(backStackEntryCount);
+                    fragment.onResume();
+                }
+            }
+        };
+        return result;
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -328,13 +349,18 @@ public class MainActivity extends AppCompatActivity
             Analytics analytics = new Analytics(mContext);
             analytics.execute("press_home_menu", "none");
             GoToFragment("home", new Bundle());
-        }
-        if (id == R.id.nav_my_orders) {
+        } else if (id == R.id.nav_clubs) {
             Analytics analytics = new Analytics(mContext);
-            analytics.execute("press_my_entries", "none");
+            analytics.execute("press_clubs_menu", "none");
+            GoToFragment("clubs", new Bundle());
+        }
+        /*if (id == R.id.nav_my_orders) {
+            Analytics analytics = new Analytics(mContext);
+            analytics.execu
+            te("press_my_entries", "none");
             GoToFragment("orders", new Bundle());
 
-        } else if (id == R.id.nav_select_city) {
+        }*/ else if (id == R.id.nav_select_city) {
             Analytics analytics = new Analytics(mContext);
             analytics.execute("press_select_city_menu", "none");
             Intent intent = new Intent(this, SelectCityActivity.class);
@@ -376,623 +402,53 @@ public class MainActivity extends AppCompatActivity
         return navigationView;
     }
 
-    public void ShowOrderDialog(final Bundle entry, Event event) {
 
-        mEntry = entry;
-        mEvent = event;
 
-        cancelCallback = new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                Analytics analytics = new Analytics(mContext);
-                analytics.execute("cancel_order", "int", String.valueOf(mEvent.getEventID()));
-                Snackbar.make(findViewById(R.id.container), "Se ha cancelado la reserva", Snackbar.LENGTH_LONG).show();
-            }
-        };
-
-        if (mEntry.getString("order_type").contains("data")) {
-            if (mEntry.getString("order_type").contains("contact"))
-                ShowDataDialog("cancel", "contact", "");
-            else
-                ShowDataDialog("cancel", "success", "");
-        } else if (mEntry.getString("order_type").contains("contact")) {
-            ShowContactDialog("cancel", "success");
-        } else if (mEntry.getString("order_type").contains("pay")) {
-            Payment();
-        } else {
-            ShowSuccessDialog();
-        }
-
-    }
-
-    public void ShowDataDialog(final String negative, final String positive, String error) {
-
-        dialogBuilder = new MaterialDialog.Builder(mContext);
-        dialogBuilder
-                .customView(R.layout.dialog_data, false)
-                .title("Introduce tus datos")
-                .titleColorRes(R.color.White)
-                .positiveText("confirmar")
-                .backgroundColor(getResources().getColor(R.color.colorPrimary));
-
-        if (negative.equals("cancel")) {
-            dialogBuilder.negativeText("cancelar");
-            dialogBuilder.onNegative(cancelCallback);
-        } else if (negative.equals("contact")) {
-            dialogBuilder.negativeText("atrás");
-            ShowContactDialog("cancel", "data");
-        }
-
-        MaterialDialog.SingleButtonCallback onPositive = new MaterialDialog.SingleButtonCallback() {
-
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                dialog.dismiss();
-                if (mAdapter.isError() == 2)
-                    ShowDataDialog(negative, positive, "Una de las personas no tiene "
-                            + mEntry.getString("max_years") + " años, no nos hacemos responsables de que no le " +
-                            "dejen entrar en el local si no cumple la edad");
-                else if (mAdapter.isError() == 1)
-                    ShowDataDialog(negative, positive, "Por favor, rellene todos los campos");
-                else {
-                    mEntry.putString("data", mAdapter.getData());
-                    if (positive.equals("success"))
-                        Payment();
-                    else if (positive.equals("contact"))
-                        ShowContactDialog("data", "success");
-                }
-            }
-        };
-        dialogBuilder.onPositive(onPositive);
-
-        editDialog = dialogBuilder.build();
-        editDialog.setCanceledOnTouchOutside(false);
-        etContact = (EditText) editDialog.findViewById(R.id.et_order_contact);
-        ((TextView) editDialog.findViewById(R.id.tv_data_error)).setText(error);
-
-        RecyclerView rvData = (RecyclerView) editDialog.findViewById(R.id.rv_dialog_data);
-        mAdapter = new DataAdapter(mEntry, this);
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-        rvData.setLayoutManager(mLayoutManager);
-        rvData.setItemAnimator(new DefaultItemAnimator());
-        rvData.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
-
-        editDialog.setCanceledOnTouchOutside(false);
-        editDialog.show();
-
-    }
-
-    public void ShowContactDialog(final String negative, final String positive) {
-
-        MaterialDialog dialog;
-
-        final MaterialDialog.Builder builder = new MaterialDialog.Builder(mContext)
-                .customView(R.layout.dialog_order, false)
-                .positiveText("confirmar")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                        switch (mCheckedOption) {
-                            case R.id.rb_telefono:
-                                mEntry.putString("contact_method", "telefono");
-                                break;
-                            case R.id.rb_correo:
-                                mEntry.putString("contact_method", "correo");
-                                break;
-                            case R.id.rb_facebook:
-                                mEntry.putString("contact_method", "facebook");
-                                break;
-                        }
-                        ShowEditDialog(negative, positive, "");
-                    }
-                })
-                .backgroundColor(getResources().getColor(R.color.colorPrimary));
-
-        if (negative.equals("cancel")) {
-            builder.negativeText("cancelar");
-        } else {
-            builder.negativeText("atrás");
-        }
-
-        MaterialDialog.SingleButtonCallback onNegative = new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                if (negative.equals("cancel")) {
-                    builder.onNegative(cancelCallback);
-                } else if (negative.equals("data")) {
-                    ShowDataDialog("cancel", "contact", "");
-                } else if (negative.equals("pay")) {
-                    Payment();
-                }
-            }
-        };
-        builder.onNegative(onNegative);
-        dialog = builder.build();
-        dialog.setCanceledOnTouchOutside(false);
-
-        TextView tvOrder = (TextView) dialog.findViewById(R.id.tv_order);
-        tvOrder.setText("Muchas gracias por reservar con Diver, " + Profile.getCurrentProfile().getFirstName() + ".\n\n" +
-                "En breves momentos le contactará uno de nuestros relaciones públicas, \n\n" +
-                "¿qué medio de contacto prefiere?");
-
-        rbTelefono = (RadioButton) dialog.findViewById(R.id.rb_telefono);
-        rbFacebook = (RadioButton) dialog.findViewById(R.id.rb_facebook);
-        rbCorreo = (RadioButton) dialog.findViewById(R.id.rb_correo);
-
-        mCheckedOption = rbTelefono.getId();
-
-        final List<RadioButton> mRadioButtons = new ArrayList<>();
-        mRadioButtons.add(rbTelefono);
-        mRadioButtons.add(rbFacebook);
-        mRadioButtons.add(rbCorreo);
-
-        View.OnClickListener rbListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for (RadioButton rb : mRadioButtons) {
-                    rb.setChecked(false);
-                }
-                ((RadioButton) view).setChecked(true);
-                mCheckedOption = view.getId();
-            }
-        };
-        for (RadioButton rb : mRadioButtons) {
-            rb.setOnClickListener(rbListener);
-        }
-
-        dialog.findViewById(R.id.ll_telefono).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                rbTelefono.performClick();
-            }
-        });
-        dialog.findViewById(R.id.ll_correo).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                rbCorreo.performClick();
-            }
-        });
-        dialog.findViewById(R.id.ll_facebook).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                rbFacebook.performClick();
-            }
-        });
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
-
-    }
-
-    private void ShowEditDialog(final String negative, final String positive, String error) {
-        if (mCheckedOption == rbCorreo.getId() | mCheckedOption == rbTelefono.getId()) {
-            dialogBuilder = new MaterialDialog.Builder(mContext);
-            dialogBuilder
-                    .customView(R.layout.dialog_edit_contact, false)
-                    .negativeText("atrás")
-                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            ShowContactDialog(negative, positive);
-                        }
-                    })
-                    .positiveText("confirmar")
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            mEntry.putString("contact_data", etContact.getText().toString());
-                            if (mCheckedOption == rbCorreo.getId()) {
-                                if (etContact.getText().toString().contains("@")) {
-                                    onEditPositive(negative, positive);
-                                } else {
-                                    ShowEditDialog(negative, positive, "Correo electrónico inválido");
-                                }
-
-                            } else {
-                                if (etContact.getText().toString().length() == 9) {
-                                    onEditPositive(negative, positive);
-                                } else {
-                                    ShowEditDialog(negative, positive, "Número de teléfono inválido");
-                                }
-                            }
-                        }
-                    })
-                    .titleColorRes(R.color.White)
-                    .backgroundColor(getResources().getColor(R.color.colorPrimary));
-
-            if (mCheckedOption == rbCorreo.getId()) {
-                dialogBuilder.title("Introduce tu correo electrónico");
-            } else {
-                dialogBuilder.title("Introduce tu número de teléfono");
-            }
-            editDialog = dialogBuilder.build();
-            editDialog.setCanceledOnTouchOutside(false);
-            etContact = (EditText) editDialog.findViewById(R.id.et_order_contact);
-            tilOrder = (TextInputLayout) editDialog.findViewById(R.id.til_order);
-            if (!error.equals("")) {
-                tilOrder.setErrorEnabled(true);
-                tilOrder.setError(error);
-            }
-            if (mCheckedOption == rbCorreo.getId()) {
-                String email = sharedPref.getString("user_email", "nulo");
-                email = email.equals("nulo") ? "" : email;
-                if (error.equals("")) etContact.setText(email);
-                else etContact.setText("");
-
-            } else {
-                //TODO try get phone number
-                etContact.setText("");
-                etContact.setInputType(InputType.TYPE_CLASS_PHONE);
-            }
-            editDialog.setCanceledOnTouchOutside(false);
-            editDialog.show();
-
-        } else {
-
-            //TODO fill mEntry
-            if (positive.equals("success")) {
-                Payment();
-            } else if (positive.equals("data")) {
-                ShowDataDialog("contact", "success", "");
-            } else if (positive.equals("success_no_pay")) {
-                ShowSuccessDialog();
-            }
-        }
-    }
-
-    private void onEditPositive(String negative, String positive) {
-
-        //TODO fill mEntry
-        if (positive.equals("success")) {
-
-            Payment();
-        } else if (positive.equals("data")) {
-
-            ShowDataDialog("contact", "success", "");
-        } else if (positive.equals("success_no_pay")) {
-            ShowSuccessDialog();
-        }
-    }
-
-    private void Payment() {
-
-        if (mEntry.getString("order_type").contains("pay")) {
-            ShowPayOptionDialog();
-        } else {
-            ShowSuccessDialog();
-        }
-    }
-
-    public void ShowSuccessDialog() {
+    public void ShowSuccessDialog(final Bundle entry, Event event) {
+        GoToFragment("home",new Bundle());
+        mEntry=entry;
+        mEvent=event;
         SendLists sendLists = new SendLists(this, mEntry);
         sendLists.execute();
     }
 
-    public void ShowPayOptionDialog() {
-        MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(mContext);
 
-        final MaterialDialog dialog = dialogBuilder
-                .customView(R.layout.dialog_payment_method, false)
-                .negativeText("cancelar")
-                .onNegative(cancelCallback)
-                .title("Pago")
-                .titleColorRes(R.color.White)
-                .backgroundColorRes(R.color.colorPrimary)
-                .build();
-
-        if (!mEntry.getString("order_type").contains("optionalpay")) {
-            dialog.findViewById(R.id.ll_choose_puerta).setVisibility(View.GONE);
-        }
-        if (sharedPref.getString("credit_card_number", null) == null) {
-            dialog.findViewById(R.id.ll_credit_card).setVisibility(View.GONE);
-        } else {
-            ((TextView) dialog.findViewById(R.id.tv_card_number)).setText(sharedPref.getString("credit_card_number", "**** **** **** ****"));
-            ((TextView) dialog.findViewById(R.id.tv_card_date)).setText(sharedPref.getString("credit_card_date_month", "**") +
-                    "/" + sharedPref.getString("credit_card_date_year", "**"));
-        }
-        dialog.findViewById(R.id.ll_credit_card).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                mEntry.putString("payment_method", "credit_card");
-                PayCreditCard("old");
-            }
-        });
-        dialog.findViewById(R.id.ll_add_card).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                mEntry.putString("payment_method", "credit_card");
-                PayCreditCard("new");
-            }
-        });
-        dialog.findViewById(R.id.ll_choose_paypal).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                mEntry.putString("payment_method", "paypal");
-                PayPalPay();
-            }
-        });
-        dialog.findViewById(R.id.ll_choose_puerta).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                mEntry.putString("payment_method", "puerta");
-                if (mEntry.getString("order_type").contains("optionalpaycont")) {
-                    ShowContactDialog("pay", "success_no_pay");
-                } else {
-                    ShowSuccessDialog();
-                }
-            }
-        });
-
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
-    }
-
-    public void PayCreditCard(final String type) {
-        MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(mContext);
-        final Card card = new Card("", 0, 0, "000");
-
-        final MaterialDialog dialog = dialogBuilder
-                .customView(R.layout.dialog_credit_card_pay, false)
-                .negativeText("atrás")
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Payment();
-                    }
-                })
-                .positiveText("PAGAR")
-                .title("Introduzca los datos de la tarjeta de crédito")
-                .titleColorRes(R.color.White)
-                .backgroundColorRes(R.color.colorPrimary)
-                .build();
-
-        dialog.getActionButton(DialogAction.POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (etCardNumber.getText().toString().equals("") & etCardDateMonth.getText().toString().equals("")
-                        & etCardDateYear.getText().toString().equals("") & etCardCVC.getText().toString().equals("")) {
-                    tvCardRestError.setText("La tarjeta no es válida, por favor revisa todos los campos");
-                } else {
-
-
-                    card.setNumber(etCardNumber.getText().toString());
-                    card.setCVC(etCardCVC.getText().toString());
-                    card.setExpMonth(Integer.valueOf(etCardDateMonth.getText().toString()));
-                    card.setExpYear(Integer.valueOf(etCardDateYear.getText().toString()));
-                    if (!card.validateCard()) {
-                        tvCardRestError.setText("La tarjeta no es válida, por favor revisa todos los campos");
-                    } else {
-                        dialog.dismiss();
-
-                        progressDialog = new MaterialDialog.Builder(mContext)
-                                .title("Espera porfavor")
-                                .content("Procesando el pago...")
-                                .progress(true, 0)
-                                .progressIndeterminateStyle(false)
-                                .build();
-                        progressDialog.setCanceledOnTouchOutside(false);
-                        progressDialog.show();
-
-                        if (cbCardSave.isChecked()) {
-                            SharedPreferences.Editor editor = sharedPref.edit();
-
-                            editor.putString("credit_card_number", etCardNumber.getText().toString());
-                            editor.putString("credit_card_date_month", etCardDateMonth.getText().toString());
-                            editor.putString("credit_card_date_year", etCardDateYear.getText().toString());
-
-                            editor.apply();
-                        }
-
-                        try {
-                            Stripe stripe = new Stripe("pk_test_AQdkzKwecFMC8X7ax6XhXVNJ");
-                            stripe.createToken(
-                                    card,
-                                    new TokenCallback() {
-                                        public void onSuccess(Token token) {
-                                            // Send token to your server
-                                            progressDialog.dismiss();
-                                            mEntry.putString("payment_token", token.getId());
-                                            mEntry.putString("payment_last_4", token.getCard().getLast4());
-                                            ShowSuccessDialog();
-                                            Log.i("payment", token.toString());
-                                            (new Analytics(mContext)).execute("stripe_success", "text", token.getId());
-                                        }
-
-                                        public void onError(Exception error) {
-                                            // Show localized error message
-                                            Snackbar.make(findViewById(R.id.container), "Ha ocurrido un error, por favor inténtelo de nuevo o contacte con alguien de nuestro equipo", Snackbar.LENGTH_LONG).show();
-                                            (new Analytics(mContext)).execute("stripe_error", "text", error.toString());
-                                        }
-                                    }
-                            );
-                        } catch (AuthenticationException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
-            }
-        });
-        etCardNumber = (EditText) dialog.findViewById(R.id.et_card_number);
-        etCardDateMonth = (EditText) dialog.findViewById(R.id.et_card_date_month);
-        etCardDateYear = (EditText) dialog.findViewById(R.id.et_card_date_year);
-        etCardCVC = (EditText) dialog.findViewById(R.id.et_card_cvc);
-        cbCardSave = (CheckBox) dialog.findViewById(R.id.cb_card_save);
-        tvCardNumberError = (TextView) dialog.findViewById(R.id.tv_card_number_error);
-        tvCardRestError = (TextView) dialog.findViewById(R.id.tv_card_rest_error);
-
-        if (type.equals("old")) {
-            etCardNumber.setText(sharedPref.getString("credit_card_number", ""));
-            etCardDateMonth.setText(sharedPref.getString("credit_card_date_month", ""));
-            etCardDateYear.setText(sharedPref.getString("credit_card_date_year", ""));
-        }
-
-        etCardNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (i2 < i1) z = 1;
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (z == 0) {
-                    if (editable.toString().length() == 4) {
-                        etCardNumber.setText(editable.toString() + "-");
-                        etCardNumber.setSelection(etCardNumber.length());
-                    }
-                    if (editable.toString().length() == 9) {
-                        etCardNumber.setText(editable.toString() + "-");
-                        etCardNumber.setSelection(etCardNumber.length());
-                    }
-                    if (editable.toString().length() == 14) {
-                        etCardNumber.setText(editable.toString() + "-");
-                        etCardNumber.setSelection(etCardNumber.length());
-                    }
-                    if (editable.toString().length() == 19) {
-                        etCardDateMonth.requestFocus();
-                    }
-                } else {
-                    z = 0;
-                }
-
-            }
-        });
-
-        etCardDateMonth.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.toString().length() == 2) etCardDateYear.requestFocus();
-            }
-        });
-
-        etCardDateYear.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.toString().length() == 2) etCardCVC.requestFocus();
-            }
-        });
-
-        etCardNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    card.setNumber(etCardNumber.getText().toString());
-                    if (!card.validateNumber()) {
-                        tvCardNumberError.setText("El número introducido no es válido");
-                    } else {
-                        tvCardNumberError.setText("");
-                    }
-                }
-            }
-        });
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
-    }
-
-    public void PayPalPay() {
-        onBuyPressed(String.valueOf(Integer.valueOf(mEntry.getString("price")) * Integer.valueOf(mEntry.getString("people"))));
-    }
 
     @Override
     public void onDestroy() {
-        stopService(new Intent(this, PayPalService.class));
         super.onDestroy();
     }
 
-    public void onBuyPressed(String amount) {
-
-        // PAYMENT_INTENT_SALE will cause the payment to complete immediately.
-        // Change PAYMENT_INTENT_SALE to
-        //   - PAYMENT_INTENT_AUTHORIZE to only authorize payment and capture funds later.
-        //   - PAYMENT_INTENT_ORDER to create a payment for authorization and capture
-        //     later via calls from your server.
-
-        PayPalPayment payment = new PayPalPayment(new BigDecimal(amount), "EUR", "Reserva de " + Profile.getCurrentProfile().getName() +
-                " en " + mEvent.getName(),
-                PayPalPayment.PAYMENT_INTENT_SALE);
-
-        Intent intent = new Intent(this, PaymentActivity.class);
-
-        // send the same configuration for restart resiliency
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-
-        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
-
-        startActivityForResult(intent, 0);
+    public void GetData(Bundle bundle, Event event){
+        GetDataFragment mFragment= GetDataFragment.GetInstance(bundle,event);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack("get_data");
+        fragmentTransaction.replace(R.id.container, mFragment);
+        fragmentTransaction.commit();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-            if (confirm != null) {
-                try {
-                    Log.i("paymentExample", confirm.toJSONObject().toString(4));
+    public void ToPayment(Bundle bundle, Event event){
+        PaymentFragment mFragment= PaymentFragment.GetInstance(bundle,event);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack("payment");
+        fragmentTransaction.replace(R.id.container, mFragment);
+        fragmentTransaction.commit();
+    }
 
-                    mEntry.putString("payment_token", confirm.getProofOfPayment().getPaymentId());
-                    if (confirm.getProofOfPayment().getState().equals("approved")) {
-                        ShowSuccessDialog();
-                    } else {
-                        MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(mContext);
+    public void ToContact(Bundle bundle, Event event){
+        ContactFragment mFragment= ContactFragment.GetInstance(bundle,event);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack("contact");
+        fragmentTransaction.replace(R.id.container, mFragment);
+        fragmentTransaction.commit();
+    }
 
-                        MaterialDialog dialog = dialogBuilder
-                                .positiveText("ok")
-                                .title("Error al pagar")
-                                .titleColorRes(R.color.White)
-                                .content("Lo sentimos, parece que ha habido un error en el pago. \n\nNo le deberíamos haber cobrado, si este fuera" +
-                                        " el caso, póngase en contacto con nuestro equipo en cualquier correo de diver como pagos@diverapp.es")
-                                .contentColorRes(R.color.White)
-                                .backgroundColorRes(R.color.colorPrimary)
-                                .build();
-
-                        dialog.show();
-                    }
-                    // TODO: send 'confirm' to your server for verification.
-                    // see https://developer.paypal.com/webapps/developer/docs/integration/mobile/verify-mobile-payment/
-                    // for more details.
-
-                } catch (JSONException e) {
-                    Log.e("paymentExample", "an extremely unlikely failure occurred: ", e);
-                }
-            }
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            Log.i("paymentExample", "The user canceled.");
-            Snackbar.make(findViewById(R.id.container), "Se ha cancelado la reserva", Snackbar.LENGTH_LONG).show();
-        } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
-            Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
-            Snackbar.make(findViewById(R.id.container), "La cuenta de PayPal no es válida.\nSe ha cancelado la reserva.", Snackbar.LENGTH_LONG).show();
-        }
+    public void ToEditContact(Bundle bundle, Event event){
+        EditContactFragment mFragment= EditContactFragment.GetInstance(bundle,event);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack("edit_contact");
+        fragmentTransaction.replace(R.id.container, mFragment);
+        fragmentTransaction.commit();
     }
 
     protected void onStart() {
@@ -1027,6 +483,19 @@ public class MainActivity extends AppCompatActivity
             }
 
         }
-
     }
+/*
+    @Override
+    public void onBackPressed() {
+
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+            //additional code
+        } else {
+            getFragmentManager().popBackStack();
+        }
+
+    }*/
 }

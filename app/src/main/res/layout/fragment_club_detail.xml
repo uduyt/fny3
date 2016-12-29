@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBack">
+
+
+
+    <com.github.florent37.materialviewpager.MaterialViewPager
+        android:id="@+id/vp_club_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:viewpager_pagerTitleStrip="@layout/pagersliding"
+        app:viewpager_logo="@layout/header_logo"
+        app:viewpager_logoMarginTop="100dp"
+        app:viewpager_color="@color/colorPrimary"
+        app:viewpager_headerHeight="200dp"
+        app:viewpager_headerAlpha="0"
+        app:viewpager_imageHeaderDarkLayerAlpha="0"
+        app:viewpager_hideLogoWithFade="false"
+        app:viewpager_hideToolbarAndTitle="false"
+        app:viewpager_enableToolbarElevation="true"
+        app:viewpager_parallaxHeaderFactor="1.4"
+        app:viewpager_headerAdditionalHeight="40dp"
+        app:viewpager_displayToolbarWhenSwipe="true"
+        app:viewpager_transparentToolbar="false"
+        app:viewpager_animatedHeaderImage="true"
+        app:viewpager_header="@layout/header"
+        />
+
+
+
+   <!-- <com.github.florent37.materialviewpager.MaterialViewPager
+            android:id="@+id/vp_club_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:viewpager_color="@color/colorPrimary"
+            app:viewpager_pagerTitleStrip="@layout/material_view_pager_pagertitlestrip_newstand"
+            app:viewpager_headerHeight="200dp"
+            app:viewpager_headerAlpha="1.0"
+            app:viewpager_hideLogoWithFade="false"
+            app:viewpager_hideToolbarAndTitle="false"
+            app:viewpager_enableToolbarElevation="true"
+            app:viewpager_parallaxHeaderFactor="1.5"
+            app:viewpager_headerAdditionalHeight="20dp"
+            app:viewpager_displayToolbarWhenSwipe="true"
+            app:viewpager_transparentToolbar="true"
+            app:viewpager_animatedHeaderImage="true"
+            app:viewpager_disableToolbar="false"
+
+            />-->
+
+       <!-- <android.support.v4.view.ViewPager
+            android:id="@+id/vp_club_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
+
+</android.support.design.widget.CoordinatorLayout>

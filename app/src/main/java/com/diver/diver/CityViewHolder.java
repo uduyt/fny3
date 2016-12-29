@@ -7,8 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -21,6 +24,7 @@ public class CityViewHolder extends RecyclerView.ViewHolder {
     private TextView tvName;
     private LinearLayout llItemCity;
     private View mItemView;
+    private ImageView ivCity;
     private Context mContext;
 
     public CityViewHolder(View itemView, Context context) {
@@ -29,11 +33,13 @@ public class CityViewHolder extends RecyclerView.ViewHolder {
         mContext = context;
         tvName = (TextView) itemView.findViewById(R.id.tv_city_name);
         llItemCity = (LinearLayout) itemView.findViewById(R.id.ll_item_city);
+        ivCity = (ImageView) itemView.findViewById(R.id.iv_city_image);
     }
 
     public void bindCity(final Bundle city) {
         Name = city.getString("name");
         tvName.setText(city.getString("name"));
+        Picasso.with(mContext).load("http://diverapp.es/images/" + city.getString("id") + "city_image.jpg").into(ivCity);
         llItemCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

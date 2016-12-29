@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,10 +42,12 @@ public class GetCity extends AsyncTask<Object, String, String> {
     private Context mContext;
     private Event.EventAdapter mAdapter;
     private TextView tvCity;
-    private HomeFragment mFragment;
+    private Fragment mFragment;
+    private City mCity;
 
-    public GetCity(HomeFragment fragment) {
-        mFragment=fragment;
+    public GetCity(City city) {
+        mFragment=(Fragment) city;
+        mCity=city;
         mContext=mFragment.getActivity();
     }
 
@@ -123,7 +126,7 @@ public class GetCity extends AsyncTask<Object, String, String> {
     protected void onPostExecute(String result) {
 
         if (result != null) {
-            mFragment.SetEventIntros(result);
+            mCity.setCity(result);
         }else{
             Snackbar.make(((Activity)mContext).findViewById(R.id.container), "No hay buena conexión a internet, inténtelo más tarde", Snackbar.LENGTH_LONG).show();
         }
